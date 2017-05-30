@@ -9,6 +9,10 @@ package com.mf.qa.epost;
 
 public class App {
     public static void main(String[] args) {
-        (new Tst1234()).run();
+        try {
+            (new Tst1234()).run();
+        } catch (Exception e) {
+            System.out.println("Test failed: " + e.getMessage());
+        }
     }
 }

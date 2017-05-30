@@ -14,6 +14,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 public class Tst1234 {
 
     /**
@@ -55,6 +58,8 @@ public class Tst1234 {
      */
     public void run() throws Exception
     {
+
+        driver.get("http://www.luc.edu/cs/");
 
         step1();
         step2();
@@ -109,17 +114,22 @@ public class Tst1234 {
      */
     private String step4()
     {
-        // @todo: consider changing this to find link by text, rather than location, to ensure
-        // we are visiting the link provided it's in the drop down and not requiring it to be in a
-        // specific place
-        WebElement link = driver.findElement(By.xpath("//*[@id=\"main-nav\"]/li[6]/ul/li[4]/a"));
+        // This method is the best, if we know the positioning of the link should never change
+//        WebElement link = driver.findElement(By.xpath("//*[@id=\"main-nav\"]/li[6]/ul/li[4]/a"));
+
+        // but without that assumption, this method, which is slightly slower, will always work
+        WebElement link = driver.findElement(
+                By.xpath(
+                        "//*[@id='main-nav']/li/a[text() = 'Research']/ancestor::li/ul/li/a[contains(text(), 'Emerging Technologies')]"
+                )
+        );
+
         // account for small resolutions switching to mobile menu
         if (link.isDisplayed())
             link.click();
         else
             driver.get(link.getAttribute("href"));
 
-        System.out.println()
         return driver.getCurrentUrl();
     }
 
@@ -132,6 +142,7 @@ public class Tst1234 {
         driver.get("http://www.luc.edu");
         return driver.getCurrentUrl();
     }
+
 
     private WebDriver createDriver()
     {

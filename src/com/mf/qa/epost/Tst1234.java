@@ -14,9 +14,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
 public class Tst1234 {
 
     /**
@@ -30,9 +27,16 @@ public class Tst1234 {
     private final String PATH_CHROMEDRIVER = "/Users/elly/dev/selenium/chromedriver";
 
     /**
-     * Preconditions
+     * Pre-conditions
+     * trailing slash required
      */
-    private final String PRECOND_START_URL = "http://www.plumtreegroup.net";
+    public static final String PRECOND_START_URL = "http://www.plumtreegroup.net/";
+
+    /**
+     * @var the URL for Loyola
+     * trailing slash required
+     */
+    public static final String LUC_URL = "http://www.luc.edu/";
 
     /**
      * Sets up the testing dependencies
@@ -49,8 +53,17 @@ public class Tst1234 {
     {
         driver = createDriver();
 
-        // Precondition: we are already at "http://www.plumtreegroup.net"
+        // Precondition: we are already at "http://www.plumtreegroup.net/"
         driver.get(PRECOND_START_URL);
+    }
+
+    /**
+     * Gets the current URL of the web driver
+     * @return the URL
+     */
+    public String getUrl()
+    {
+        return driver.getCurrentUrl();
     }
 
     /**
@@ -58,39 +71,29 @@ public class Tst1234 {
      */
     public void run() throws Exception
     {
-
-        driver.get("http://www.luc.edu/cs/");
-
         step1();
         step2();
         step3();
-        String s4 = step4();
-        // @todo unit test
-        if (! s4.equals("https://loyolachicagoetl.github.io/"))
-            throw new Exception("Wrong URL: " + s4);
+        step4();
+        step5();
 
-        String s5 = step5();
-        // @todo unit test
-        if (! s5.equals("http://www.luc.edu/"))
-            throw new Exception("Wrong URL: " + s5);
-
-        driver.quit();
+        quitDriver();
     }
 
     /**
      * Tst-1234-1
      * Navigate to www.luc.edu
      */
-    private void step1()
+    public void step1()
     {
-        driver.get("http://www.luc.edu");
+        driver.get(Tst1234.LUC_URL);
     }
 
     /**
      * Tst-1234-2
      * Search for "Computer Science" using search box in top right corner
      */
-    private void step2()
+    public void step2()
     {
         WebElement s = driver.findElement(By.name("criteria"));
         s.sendKeys("Computer Science");
@@ -103,16 +106,16 @@ public class Tst1234 {
     /**
      * Click on "Computer Science Department"
      */
-    private void step3()
+    public void step3()
     {
+
         driver.findElement(By.linkText("Computer Science Department")).click();
     }
 
     /**
      * Click on ‘Emerging Technologies Laboratory’ from the 'RESEARCH' drop down
-     * @return the URL of the page we navigate to
      */
-    private String step4()
+    public void step4()
     {
         // This method is the best, if we know the positioning of the link should never change
 //        WebElement link = driver.findElement(By.xpath("//*[@id=\"main-nav\"]/li[6]/ul/li[4]/a"));
@@ -129,24 +132,31 @@ public class Tst1234 {
             link.click();
         else
             driver.get(link.getAttribute("href"));
-
-        return driver.getCurrentUrl();
     }
 
     /**
      * Go to the home page
-     * @return String the URL of the page we navigate to
      */
-    private String step5()
+    public void step5()
     {
-        driver.get("http://www.luc.edu");
-        return driver.getCurrentUrl();
+        driver.get(Tst1234.LUC_URL);
     }
 
-
+    /**
+     * Creates the Chrome Webdriver
+     * @return chrome webdriver
+     */
     private WebDriver createDriver()
     {
         System.setProperty("webdriver.chrome.driver", PATH_CHROMEDRIVER);
         return new ChromeDriver();
+    }
+
+    /**
+     * Exits Selenium
+     */
+    public void quitDriver()
+    {
+        driver.quit();
     }
 }
